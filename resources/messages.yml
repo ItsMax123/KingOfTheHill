@@ -1,35 +1,35 @@
 # Will replace {HILL} for everything in the broadcast section
 broadcast:
-  game-started: "&eThe {HILL} KOTH has started."
-  game-stopped: "&eThe {HILL} KOTH has stopped."
-  win: "&e{PLAYER} has won the Event."  # Will replace {PLAYER} and {HILL}
+  game-started: "&eThe &6{HILL}&e KOTH Event has started."
+  game-stopped: "&eThe &6{HILL}&e KOTH Event has stopped."
+  win: "&l&a{PLAYER}&b has won the &6{HILL}&b KOTH Event."  # Will also replace {PLAYER}
 
 # Will replace {HILL} for everything in the success section
 success:
-  hill-create: "&aThe hill {HILL} was successfully created."
-  hill-delete: "&aThe hill {HILL} was successfully deleted."
-  enable: "&aThe hill {HILL} was enabled."
-  disable: "&aThe hill {HILL} was disabled."
-  set-spawn: "&aThe spawn point for the hill {HILL} was set."
-  del-spawn: "&aThe spawn point for the hill {HILL} was deleted."
-  set-pos1: "&aThe first corner for the hill {HILL} was set."
-  set-pos2: "&aThe second corner for the hill {HILL} was set."
-  add-reward: "&aA reward for the hill {HILL} was added."
-  del-reward: "&aA reward for the hill {HILL} was deleted."
-  set-time: "&aThe time to capture for the hill {HILL} was set."
-  teleport-spawn: "&aTeleporting to the {HILL} hill's spawn."
+  hill-create: "&aThe hill &6{HILL}&a was created."
+  hill-delete: "&aThe hill &6{HILL}&a was deleted."
+  enable: "&aThe hill &6{HILL}&a was enabled."
+  disable: "&aThe hill &6{HILL}&a was disabled."
+  set-spawn: "&aThe spawn point for the hill &6{HILL}&a was set."
+  del-spawn: "&aThe spawn point for the hill &6{HILL}&a was deleted."
+  set-pos1: "&aThe first corner for the hill &6{HILL}&a was set."
+  set-pos2: "&aThe second corner for the hill &6{HILL}&a was set."
+  add-reward: "&aA reward for the hill &6{HILL}&a was added."
+  del-reward: "&aA reward for the hill &6{HILL}&a was deleted."
+  set-time: "&aThe time to capture the hill &6{HILL}&a was set."
+  teleport-spawn: "&aTeleporting to the &6{HILL}&a KOTH Event Spawn."
 
 fail:
   in-game-command: "&cThe command can only be run in-game."
-  reward-doesnt-exist: "&eThe reward {REWARD} does not exist. (Rewards are capital sensitive)"  # Will replace {REWARD}
-  hill-doesnt-exist: "&cThe hill {HILL} does not exist."  # Will replace {HILL}
-  hill-already-exist: "&eThe hill {HILL} already exists."  # Will replace {HILL}
+  reward-doesnt-exist: "&cThe reward '{REWARD}' does not exist. (Rewards are cap-sensitive)"  # Will replace {REWARD}
+  hill-doesnt-exist: "&cThe hill &6{HILL}&c does not exist."  # Will replace {HILL}
+  hill-already-exist: "&cThe hill &6{HILL}&c already exists."  # Will replace {HILL}
   no-hills: "&cThere are no enabled hills. Please create or enable a hill."
-  no-game: "&cThere are no games running."
-  no-spawn: "&cThe hill {HILL} has no spawn point."  # Will replace {HILL}
+  no-game: "&cThere is no KOTH Event running."
+  no-spawn: "&cThe hill &6{HILL}&c has no spawn point."  # Will replace {HILL}
   game-cant-start: "&cThe game failed to start."
   time-not-positive: "&cThe time should be a positive number."
-  hill-running: "&cThe hill {HILL} is currently running."  # Will replace {HILL}
+  hill-running: "&cThe hill &6{HILL}&c is currently running."  # Will replace {HILL}
 
 info:
   title: "&e[ Hill Information ]"  # Will replace {HILL}
@@ -57,4 +57,4 @@ list:
 
 bossbar:
   title: "King Of The Hill {HILL}"  # Will replace {HILL}
-  subtitle: "King: {PLAYER} - Time Left: {TIME}"  # Will replace {PLAYER} and {TIME}
+  subtitle: "King: {PLAYER} - Time: {TIME}"  # Will replace {PLAYER} and {TIME}
