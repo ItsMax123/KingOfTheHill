@@ -8,7 +8,7 @@ projects:
     libs:
       - src: Paroxity/Commando/Commando
         version: ^3.2.0
-      - src: xenialdan/apibossbar/apibossbar
+      - src: inxomnyaa/apibossbar/apibossbar
         version: ^0.1.6
         branch: pm5
 ...
