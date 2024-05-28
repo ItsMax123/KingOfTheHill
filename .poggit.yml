@@ -9,6 +9,6 @@ projects:
       - src: Paroxity/Commando/Commando
         version: ^3.2.0
       - src: xenialdan/apibossbar/apibossbar
-        version: ^0.0.5
+        version: ^0.1.6
         branch: pm5
 ...
