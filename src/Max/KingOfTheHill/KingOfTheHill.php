@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Max\KingOfTheHill;
 
+use CortexPE\Commando\exception\HookAlreadyRegistered;
+use CortexPE\Commando\PacketHooker;
 use ErrorException;
 use JsonException;
 use Max\KingOfTheHill\addons\bossbar\BossBarListener;
@@ -29,7 +31,13 @@ class KingOfTheHill extends PluginBase {
         self::$instance = $this;
     }
 
+    /**
+     * @throws HookAlreadyRegistered
+     */
     public function onEnable(): void {
+        if(!PacketHooker::isRegistered()) {
+            PacketHooker::register($this);
+        }
         $this->saveDefaultConfig();
         $this->saveResource("data.yml");
         $this->saveResource("messages.yml");
