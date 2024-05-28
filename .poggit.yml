@@ -1,0 +1,11 @@
+--- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/ItsMax123/KingOfTheHill
+branches:
+  - master
+projects:
+  KingOfTheHill:
+    path: ""
+    icon: "KingOfTheHill.png"
+    libs:
+      - src: Paroxity/Commando/Commando
+        version: ^3.2.0
+...

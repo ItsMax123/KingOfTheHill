@@ -1,0 +1,60 @@
+# Will replace {HILL} for everything in the broadcast section
+broadcast:
+  game-started: "&eThe {HILL} KOTH has started."
+  game-stopped: "&eThe {HILL} KOTH has stopped."
+  win: "&e{PLAYER} has won the Event."  # Will replace {PLAYER} and {HILL}
+
+# Will replace {HILL} for everything in the success section
+success:
+  hill-create: "&aThe hill {HILL} was successfully created."
+  hill-delete: "&aThe hill {HILL} was successfully deleted."
+  enable: "&aThe hill {HILL} was enabled."
+  disable: "&aThe hill {HILL} was disabled."
+  set-spawn: "&aThe spawn point for the hill {HILL} was set."
+  del-spawn: "&aThe spawn point for the hill {HILL} was deleted."
+  set-pos1: "&aThe first corner for the hill {HILL} was set."
+  set-pos2: "&aThe second corner for the hill {HILL} was set."
+  add-reward: "&aA reward for the hill {HILL} was added."
+  del-reward: "&aA reward for the hill {HILL} was deleted."
+  set-time: "&aThe time to capture for the hill {HILL} was set."
+  teleport-spawn: "&aTeleporting to the {HILL} hill's spawn."
+
+fail:
+  in-game-command: "&cThe command can only be run in-game."
+  reward-doesnt-exist: "&eThe reward {REWARD} does not exist. (Rewards are capital sensitive)"  # Will replace {REWARD}
+  hill-doesnt-exist: "&cThe hill {HILL} does not exist."  # Will replace {HILL}
+  hill-already-exist: "&eThe hill {HILL} already exists."  # Will replace {HILL}
+  no-hills: "&cThere are no enabled hills. Please create or enable a hill."
+  no-game: "&cThere are no games running."
+  no-spawn: "&cThe hill {HILL} has no spawn point."  # Will replace {HILL}
+  game-cant-start: "&cThe game failed to start."
+  time-not-positive: "&cThe time should be a positive number."
+  hill-running: "&cThe hill {HILL} is currently running."  # Will replace {HILL}
+
+info:
+  title: "&e[ Hill Information ]"  # Will replace {HILL}
+  name: "&eName: &6&l{HILL}&r"
+  status: "&eStatus: {STATUS}"  # Will replace {STATUS}
+  running: "&b&lRunning"
+  enabled: "&aEnabled"
+  disabled: "&cDisabled"
+  time: "&eCapture Time: &r{TIME}"  # Will replace {TIME}
+  spawn: "&eSpawn: {COORDS}"  # Will replace {COORDS}
+  location: "&eLocation: {COORDS}"  # Will replace {COORDS}
+  rewards-title: "&eRewards:"
+  rewards-line: "&r - '/{REWARD}'"  # Will replace {REWARD}
+  coords-set: "&r{X}, {Y}, {Z}"  # Will replace {X}, {Y} and {Z}
+  coords-not-set: "&cNot Set"
+
+list:
+  title: "&eList of all Hills:&r"
+  line: " - {STATUS}&r: {HILL}{COORDS}"  # Will replace {HILL}, {STATUS} and {COORDS}
+  running: "&b&lRunning"  # Will replace {COORDS}
+  enabled: "&aEnabled"  # Will replace {COORDS}
+  disabled: "&cDisabled"  # Will replace {COORDS}
+  coords-set: " (&6{X}&r, &6{Y}&r, &6{Z}&r)"  # Will replace {X}, {Y} and {Z}
+  coords-not-set: ""
+
+bossbar:
+  title: "King Of The Hill {HILL}"  # Will replace {HILL}
+  subtitle: "King: {PLAYER} - Time Left: {TIME}"  # Will replace {PLAYER} and {TIME}

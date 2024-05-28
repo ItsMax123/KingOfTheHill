@@ -1,0 +1,33 @@
+# The tick interval at which to check who is capturing koth and update the bossbar/scorehud. Recommended: 20
+update-interval: 20
+
+# Enable/Disable the BossBar.
+bossbar: true
+
+# Enable/Disable the ScoreHud tags.
+# Available tags: kingofthehill.hill, kingofthehill.king, kingofthehill.time
+# If you do not use these tags with your ScoreHud plugin, please keep this as false to not waste performance.
+scorehud: false
+
+autostart:
+  # Enable/Disable the autostart feature.
+  enabled: false
+
+  # The tick interval at which to check if it is time to autostart a game. Recommended: 1200
+  check-interval: 1200
+
+  # The minimum amount of online players for the KOTH event to automatically start.
+  # Put 0 if you want the event to start regardless of the number of online players.
+  min-players: 2
+
+  # Your server timezone.
+  # For example, America/Montreal is a valid timezone.
+  # A list of supported timezones can be found here: https://www.php.net/manual/en/timezones.php
+  timezone: UTC
+
+  # The times of day you want a KOTH event to automatically start using the timezone specified above.
+  # Format (HOUR is a number between 0-24, MINUTE is a number between 0-60):
+  # - HOUR.MINUTE
+  times:
+    - 11.00  # Starts at 11:00AM
+    - 17.30  # Starts at  5:30PM

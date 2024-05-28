@@ -1,0 +1,28 @@
+name: KingOfTheHill
+main: Max\KingOfTheHill\KingOfTheHill
+version: 1.0.0
+api: 5.0.0
+softdepend: [ScoreHud]
+
+author: ItsMax123
+website: "https://github.com/ItsMax123/KingOfTheHill"
+
+permissions:
+  kingofthehill.command.setup:
+    default: op
+    description: Allows usage of the create, delete, enable, disable, addreward, delreward, setspawn, delspawn, setpos1, setpos2, settime commands
+  kingofthehill.command.start:
+    default: op
+    description: Allows usage of the '/koth start' command
+  kingofthehill.command.stop:
+    default: op
+    description: Allows usage of the '/koth stop' command
+  kingofthehill.command.info:
+    default: true
+    description: Allows usage of the '/koth info' command
+  kingofthehill.command.list:
+    default: true
+    description: Allows usage of the '/koth list' command
+  kingofthehill.command.spawn:
+    default: true
+    description: Allows usage of the '/koth spawn' command
