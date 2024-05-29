@@ -18,6 +18,7 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 use pocketmine\world\Position;
+use Throwable;
 
 class KingOfTheHill extends PluginBase {
     private static KingOfTheHill $instance;
@@ -50,7 +51,7 @@ class KingOfTheHill extends PluginBase {
         $this->saveResource("data.yml");
         $this->data = new Config($this->getDataFolder() . "data.yml", Config::YAML);
 
-        //try {
+        try {
             foreach ($this->data->get("hills") as $name => $data) {
                 new Hill(
                     $name,
@@ -63,9 +64,9 @@ class KingOfTheHill extends PluginBase {
                     $data["capture-zone"]["pos2"] === null ? null : new Vector3($data["capture-zone"]["pos2"]["x"], $data["capture-zone"]["pos2"]["y"], $data["capture-zone"]["pos2"]["z"])
                 );
             }
-        //} catch () {
-        //    $this->getLogger()->error("Failed to load hill " . $name . ", invalid data.");
-        //}
+        } catch (Throwable) {
+            $this->getLogger()->error("Failed to load hill data.");
+        }
 
         if ($this->config->get("scorehud") && $this->getServer()->getPluginManager()->getPlugin("ScoreHud") !== null) {
             $this->getServer()->getPluginManager()->registerEvents(new ScoreHudListener(), $this);
