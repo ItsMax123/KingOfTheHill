@@ -23,12 +23,13 @@ use Throwable;
 class KingOfTheHill extends PluginBase {
     private static KingOfTheHill $instance;
 
-    private Config $config;
+    private ?GameTask $task = null;
+
+    private int $updateInterval;
+
     private Config $messages;
 
     public Config $data;
-
-    private ?GameTask $task = null;
 
     public function onLoad(): void {
         self::$instance = $this;
@@ -43,7 +44,8 @@ class KingOfTheHill extends PluginBase {
         }
 
         $this->saveDefaultConfig();
-        $this->config = $this->getConfig();
+        $config = $this->getConfig();
+        $this->updateInterval = is_int($updateInterval = $config->get("update-interval", 20)) ? $updateInterval : 20;
 
         $this->saveResource("messages.yml");
         $this->messages = new Config($this->getDataFolder() . "messages.yml", Config::YAML);
@@ -68,17 +70,21 @@ class KingOfTheHill extends PluginBase {
             $this->getLogger()->error("Failed to load hill data.");
         }
 
-        if ($this->config->get("scorehud") && $this->getServer()->getPluginManager()->getPlugin("ScoreHud") !== null) {
+        if ($this->getServer()->getPluginManager()->getPlugin("ScoreHud") !== null) {
             $this->getServer()->getPluginManager()->registerEvents(new ScoreHudListener(), $this);
         }
 
-        if ($this->config->get("bossbar", true)) {
+        if (is_bool($bossbar = $config->get("bossbar", true)) && $bossbar) {
             $this->getServer()->getPluginManager()->registerEvents(new BossBarListener($this), $this);
         }
 
-        if ($this->config->getNested("autostart.enabled", false) && ($times = $this->config->getNested("autostart.times", []))) {
-            date_default_timezone_set($this->config->getNested("autostart.timezone", "UTC"));
-            $this->getScheduler()->scheduleRepeatingTask(new AutoStartTask($this, $times, $this->config->getNested("autostart.min-players", 0)), $this->config->getNested("autostart.check-interval", 1200));
+        $times = is_array($times = $config->getNested("autostart.times", [])) ? array_filter($times, function($time): bool {return is_float($time);}) : [];
+        if (is_bool($autoStartEnabled = $config->getNested("autostart.enabled", false)) && $autoStartEnabled && $times) {
+            date_default_timezone_set(is_string($timezone = $config->getNested("autostart.timezone", "UTC")) ? $timezone : "UTC");
+            $this->getScheduler()->scheduleRepeatingTask(
+                new AutoStartTask($this, $times, is_int($minPlayers = $config->getNested("autostart.min-players", 0)) ? $minPlayers : 0),
+                is_int($checkInterval = $config->getNested("autostart.update-interval", 1200)) ? $checkInterval : 1200
+            );
         }
 
         $this->getServer()->getCommandMap()->register("kingofthehill", new KothCommand($this, "koth", "The King of the Hill Command"));
@@ -98,7 +104,7 @@ class KingOfTheHill extends PluginBase {
         $gameStartEvent->call();
         if ($gameStartEvent->isCancelled()) return false;
         $this->task = new GameTask($gameStartEvent->getHill());
-        $this->getScheduler()->scheduleRepeatingTask($this->task, $this->config->get("update-interval", 20));
+        $this->getScheduler()->scheduleRepeatingTask($this->task, $this->updateInterval);
         $this->getServer()->broadcastMessage(str_replace(
             ["{HILL}"],
             [$hill->getName()],

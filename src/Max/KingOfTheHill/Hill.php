@@ -21,10 +21,6 @@ class Hill {
         return self::$hills[strtolower($name)] ?? null;
     }
 
-//    public static function hasHill(string $name): bool {
-//        return array_key_exists(strtolower($name), self::$hills);
-//    }
-
     private KingOfTheHill $plugin;
 
     private string $name;

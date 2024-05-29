@@ -4,11 +4,6 @@ update-interval: 20
 # Enable/Disable the BossBar.
 bossbar: true
 
-# Enable/Disable the ScoreHud tags.
-# Available tags: kingofthehill.hill, kingofthehill.king, kingofthehill.time
-# If you do not use these tags with your ScoreHud plugin, please keep this as false to not waste performance.
-scorehud: false
-
 autostart:
   # Enable/Disable the autostart feature.
   enabled: false
