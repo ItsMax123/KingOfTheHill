@@ -7,10 +7,10 @@ namespace Max\KingOfTheHill\commands\subcommands\setup;
 use CortexPE\Commando\args\RawStringArgument;
 use CortexPE\Commando\BaseSubCommand;
 use CortexPE\Commando\exception\ArgumentOrderException;
+use Max\KingOfTheHill\Hill;
 use Max\KingOfTheHill\KingOfTheHill;
 use pocketmine\command\CommandSender;
 use pocketmine\plugin\Plugin;
-use pocketmine\utils\TextFormat;
 
 class DelSpawnSubCommand extends BaseSubCommand {
 
@@ -27,21 +27,21 @@ class DelSpawnSubCommand extends BaseSubCommand {
 
     public function onRun(CommandSender $sender, string $aliasUsed, array $args): void {
         $name = $args["Hill"];
-        if (!$this->plugin->hasHill($name)) {
+        $hill = Hill::getHill($name);
+        if ($hill === null) {
             $sender->sendMessage(str_replace(
                 "{HILL}",
                 $name,
-                TextFormat::colorize($this->plugin->messages->getNested("fail.hill-doesnt-exist", "fail.hill-doesnt-exist"))
+                $this->plugin->getMessage("fail.hill-doesnt-exist")
             ));
             return;
         }
 
-        $hill = $this->plugin->getHill($name);
         $hill->setSpawn(null);
         $sender->sendMessage(str_replace(
             "{HILL}",
             $hill->getName(),
-            TextFormat::colorize($this->plugin->messages->getNested("success.del-spawn", "success.del-spawn"))
+            $this->plugin->getMessage("success.del-spawn")
         ));
     }
 }

@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace Max\KingOfTheHill\commands\subcommands;
 
 use CortexPE\Commando\BaseSubCommand;
-use Max\KingOfTheHill\Game;
 use Max\KingOfTheHill\KingOfTheHill;
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use pocketmine\plugin\Plugin;
-use pocketmine\utils\TextFormat;
 
 class SpawnSubCommand extends BaseSubCommand {
 
@@ -23,23 +21,22 @@ class SpawnSubCommand extends BaseSubCommand {
 
     public function onRun(CommandSender $sender, string $aliasUsed, array $args): void {
         if (!$sender instanceof Player) {
-            $sender->sendMessage(TextFormat::colorize($this->plugin->messages->getNested("fail.in-game-command", "fail.in-game-command")));
+            $sender->sendMessage($this->plugin->getMessage("fail.in-game-command"));
             return;
         }
 
-        $game = Game::getGame();
-        if (is_null(Game::getGame())) {
-            $sender->sendMessage(TextFormat::colorize($this->plugin->messages->getNested("fail.no-game", "fail.no-game")));
+        $runningHill = $this->plugin->getRunningHill();
+        if ($runningHill === null) {
+            $sender->sendMessage($this->plugin->getMessage("fail.no-game"));
             return;
         }
 
-        $hill = $game->getHill();
-        $spawn = $hill->getSpawn();
+        $spawn = $runningHill->getSpawn();
         if (is_null($spawn)) {
             $sender->sendMessage(str_replace(
                 "{HILL}",
-                $hill->getName(),
-                TextFormat::colorize($this->plugin->messages->getNested("fail.no-spawn", "fail.no-spawn"))
+                $runningHill->getName(),
+                $this->plugin->getMessage("fail.no-spawn")
             ));
             return;
         }
@@ -47,8 +44,8 @@ class SpawnSubCommand extends BaseSubCommand {
         $sender->teleport($spawn);
         $sender->sendMessage(str_replace(
             "{HILL}",
-            $hill->getName(),
-            TextFormat::colorize($this->plugin->messages->getNested("success.teleport-spawn", "success.teleport-spawn"))
+            $runningHill->getName(),
+            $this->plugin->getMessage("success.teleport-spawn")
         ));
     }
 }

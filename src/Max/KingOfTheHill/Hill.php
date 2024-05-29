@@ -10,22 +10,40 @@ use pocketmine\world\Position;
 use pocketmine\world\World;
 
 class Hill {
-    private KingOfTheHill $plugin;
-    private string $name;
-    private array $data;
+    /** @var Hill[] */
+    private static array $hills = [];
 
+    public static function getHills(): array {
+        return self::$hills;
+    }
+
+    public static function getHill(string $name): ?Hill {
+        return self::$hills[strtolower($name)] ?? null;
+    }
+
+//    public static function hasHill(string $name): bool {
+//        return array_key_exists(strtolower($name), self::$hills);
+//    }
+
+    private KingOfTheHill $plugin;
+
+    private string $name;
     private bool $enabled;
     private int $time;
+
+    /** @var string[] */
     private array $rewards;
     private ?Position $spawn;
     private ?World $captureZoneWorld;
     private ?Vector3 $captureZonePos1;
     private ?Vector3 $captureZonePos2;
 
+    /**
+     * @param string[] $rewards
+     */
     public function __construct(string $name, bool $enabled, int $time, array $rewards, ?Position $spawn, ?World $captureZoneWorld, ?Vector3 $captureZonePos1, ?Vector3 $captureZonePos2) {
         $this->plugin = KingOfTheHill::getInstance();
         $this->name = $name;
-
         $this->enabled = $enabled;
         $this->time = $time;
         $this->rewards = $rewards;
@@ -34,31 +52,37 @@ class Hill {
         $this->captureZonePos1 = $captureZonePos1;
         $this->captureZonePos2 = $captureZonePos2;
 
-        $this->data = [
+        self::$hills[strtolower($this->name)] = $this;
+
+        $this->plugin->data->setNested("hills." . $this->name, [
             "enabled" => $this->enabled,
             "time" => $this->time,
-            "rewards" => $rewards,
-            "spawn" => ($spawn === null) ? null : [
-                "world" => $spawn->getWorld()->getFolderName(),
-                "x" => $spawn->x,
-                "y" => $spawn->y,
-                "z" => $spawn->z,
+            "rewards" => $this->rewards,
+            "spawn" => ($this->spawn === null) ? null : [
+                "world" => $this->spawn->getWorld()->getFolderName(),
+                "x" => $this->spawn->x,
+                "y" => $this->spawn->y,
+                "z" => $this->spawn->z,
             ],
             "capture-zone" => [
-                "world" => ($captureZoneWorld === null) ? null : $captureZoneWorld->getFolderName(),
-                "pos1" => ($captureZonePos1 === null) ? null : [
-                    "x" => $captureZonePos1->x,
-                    "y" => $captureZonePos1->y,
-                    "z" => $captureZonePos1->z,
+                "world" => ($this->captureZoneWorld === null) ? null : $this->captureZoneWorld->getFolderName(),
+                "pos1" => ($this->captureZonePos1 === null) ? null : [
+                    "x" => $this->captureZonePos1->x,
+                    "y" => $this->captureZonePos1->y,
+                    "z" => $this->captureZonePos1->z,
                 ],
-                "pos2" => ($captureZonePos2 === null) ? null : [
-                    "x" => $captureZonePos2->x,
-                    "y" => $captureZonePos2->y,
-                    "z" => $captureZonePos2->z,
+                "pos2" => ($this->captureZonePos2 === null) ? null : [
+                    "x" => $this->captureZonePos2->x,
+                    "y" => $this->captureZonePos2->y,
+                    "z" => $this->captureZonePos2->z,
                 ],
             ]
-        ];
-        $this->save();
+        ]);
+        try {
+            $this->plugin->data->save();
+        } catch (JsonException) {
+            $this->plugin->getLogger()->error("Failed to create Hill data.");
+        }
     }
 
     public function getName(): string {
@@ -73,6 +97,9 @@ class Hill {
         return $this->time;
     }
 
+    /**
+     * @return string[]
+     */
     public function getRewards(): array {
         return $this->rewards;
     }
@@ -97,64 +124,70 @@ class Hill {
         return $this->captureZonePos2;
     }
 
-    public function setName(string $name): void {
-        $this->plugin->removeHill($this->name);
-        $this->name = $name;
-        $this->plugin->addHill($this);
+    public function isInside(Position $position): bool {
+        if ($this->captureZoneWorld === null || $this->captureZonePos1 === null || $this->captureZonePos2 === null) return false;
+        if ($position->getWorld() === $this->captureZoneWorld &&
+            $position->x <= $this->captureZonePos2->x &&
+            $position->x >= $this->captureZonePos1->x &&
+            $position->y <= $this->captureZonePos2->y &&
+            $position->y >= $this->captureZonePos1->y &&
+            $position->z <= $this->captureZonePos2->z &&
+            $position->z >= $this->captureZonePos1->z
+        ) return true;
+        return false;
     }
 
     public function setEnabled(bool $enabled): void {
         $this->enabled = $enabled;
-        $this->data["enabled"] = $enabled;
-        $this->save();
+        $this->set("enabled", $this->enabled);
     }
 
     public function setTime(int $time): void {
         $this->time = $time;
-        $this->data["time"] = $time;
-        $this->save();
+        $this->set("time", $this->time);
     }
 
+    /**
+     * @param string[] $rewards
+     */
     public function setRewards(array $rewards): void {
         $this->rewards = $rewards;
-        $this->data["rewards"] = $rewards;
-        $this->save();
+        $this->set("rewards", $this->rewards);
     }
 
     public function addReward(string $reward): void {
         $this->rewards[] = $reward;
-        $this->data["rewards"] = $this->rewards;
-        $this->save();
+        $this->set("rewards", $this->rewards);
     }
 
     public function removeReward(string $reward): void {
         unset($this->rewards[array_search($reward, $this->rewards)]);
-        $this->data["rewards"] = $this->rewards;
-        $this->save();
+        $this->set("rewards", $this->rewards);
     }
 
     public function setSpawn(?Position $spawn): void {
         $this->spawn = $spawn;
-        $this->data["spawn"] = ($spawn === null) ? null : [
+        $this->set("spawn", ($spawn === null) ? null : [
             "world" => $spawn->getWorld()->getFolderName(),
             "x" => $spawn->x,
             "y" => $spawn->y,
             "z" => $spawn->z,
-        ];
-        $this->save();
+        ]);
     }
 
     public function setCaptureZonePos1(Position $position): void {
         $this->captureZoneWorld = $position->getWorld();
-        $this->data["capture-zone"]["world"] = $this->captureZoneWorld->getFolderName();
         if ($this->captureZonePos2 === null) {
             $this->captureZonePos1 = $position->asVector3();
-            $this->data["capture-zone"]["pos1"] = [
-                "x" => $this->captureZonePos1->x,
-                "y" => $this->captureZonePos1->y,
-                "z" => $this->captureZonePos1->z,
-            ];
-            $this->save();
+            $this->set("capture-zone", [
+                "world" => $this->captureZoneWorld->getFolderName(),
+                "pos1" => [
+                    "x" => $this->captureZonePos1->x,
+                    "y" => $this->captureZonePos1->y,
+                    "z" => $this->captureZonePos1->z,
+                ],
+                "pos2" => null,
+            ]);
         } else {
             if ($this->captureZonePos1 === null) {
                 $this->captureZonePos2 = new Vector3(
@@ -170,22 +203,35 @@ class Hill {
             $this->captureZonePos2->x = max($position->x, $this->captureZonePos2->x);
             $this->captureZonePos2->y = max($position->y, $this->captureZonePos2->y);
             $this->captureZonePos2->z = max($position->z, $this->captureZonePos2->z);
-
-            $this->setCaptureZones();
+            $this->set("capture-zone", [
+                "world" => $this->captureZoneWorld->getFolderName(),
+                "pos1" => [
+                    "x" => $this->captureZonePos1->x,
+                    "y" => $this->captureZonePos1->y,
+                    "z" => $this->captureZonePos1->z,
+                ],
+                "pos2" => [
+                    "x" => $this->captureZonePos2->x,
+                    "y" => $this->captureZonePos2->y,
+                    "z" => $this->captureZonePos2->z,
+                ],
+            ]);
         }
     }
 
     public function setCaptureZonePos2(Position $position): void {
         $this->captureZoneWorld = $position->getWorld();
-        $this->data["capture-zone"]["world"] = $this->captureZoneWorld->getFolderName();
         if ($this->captureZonePos1 === null) {
             $this->captureZonePos2 = $position->asVector3();
-            $this->data["capture-zone"]["pos2"] = [
-                "x" => $this->captureZonePos2->x,
-                "y" => $this->captureZonePos2->y,
-                "z" => $this->captureZonePos2->z,
-            ];
-            $this->save();
+            $this->set("capture-zone", [
+                "world" => $this->captureZoneWorld->getFolderName(),
+                "pos1" => null,
+                "pos2" => [
+                    "x" => $this->captureZonePos2->x,
+                    "y" => $this->captureZonePos2->y,
+                    "z" => $this->captureZonePos2->z,
+                ],
+            ]);
         } else {
             if ($this->captureZonePos2 === null) {
                 $this->captureZonePos2 = new Vector3(
@@ -201,43 +247,38 @@ class Hill {
             $this->captureZonePos1->x = min($this->captureZonePos1->x, $position->x);
             $this->captureZonePos1->y = min($this->captureZonePos1->y, $position->y);
             $this->captureZonePos1->z = min($this->captureZonePos1->z, $position->z);
-            $this->setCaptureZones();
+            $this->set("capture-zone", [
+                "world" => $this->captureZoneWorld->getFolderName(),
+                "pos1" => [
+                    "x" => $this->captureZonePos1->x,
+                    "y" => $this->captureZonePos1->y,
+                    "z" => $this->captureZonePos1->z,
+                ],
+                "pos2" => [
+                    "x" => $this->captureZonePos2->x,
+                    "y" => $this->captureZonePos2->y,
+                    "z" => $this->captureZonePos2->z,
+                ],
+            ]);
         }
     }
 
-    private function setCaptureZones(): void {
-        $this->data["capture-zone"]["pos1"] = [
-            "x" => $this->captureZonePos1->x,
-            "y" => $this->captureZonePos1->y,
-            "z" => $this->captureZonePos1->z,
-        ];
-        $this->data["capture-zone"]["pos2"] = [
-            "x" => $this->captureZonePos2->x,
-            "y" => $this->captureZonePos2->y,
-            "z" => $this->captureZonePos2->z,
-        ];
-        $this->save();
-    }
-
-    public function save(): void {
-        $this->plugin->data->setNested("hills." . $this->name, $this->data);
+    public function delete(): void {
+        unset(self::$hills[strtolower($this->name)]);
+        $this->plugin->data->removeNested("hills." . $this->name);
         try {
             $this->plugin->data->save();
         } catch (JsonException) {
-            $this->plugin->getLogger()->error("Failed to save KingOfTheHill data.");
+            $this->plugin->getLogger()->error("Failed to remove Hill data.");
         }
     }
 
-    public function isInside(Position $position): bool {
-        if ($this->captureZoneWorld === null || $this->captureZonePos1 === null || $this->captureZonePos2 === null) return false;
-        if ($position->getWorld() === $this->captureZoneWorld &&
-            $position->x <= $this->captureZonePos2->x &&
-            $position->x >= $this->captureZonePos1->x &&
-            $position->y <= $this->captureZonePos2->y &&
-            $position->y >= $this->captureZonePos1->y &&
-            $position->z <= $this->captureZonePos2->z &&
-            $position->z >= $this->captureZonePos1->z
-        ) return true;
-        return false;
+    private function set(string $key, mixed $value): void {
+        $this->plugin->data->setNested("hills." . $this->name . "." . $key, $value);
+        try {
+            $this->plugin->data->save();
+        } catch (JsonException) {
+            $this->plugin->getLogger()->error("Failed to update Hill data.");
+        }
     }
 }

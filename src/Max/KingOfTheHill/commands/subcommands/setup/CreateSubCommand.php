@@ -11,7 +11,6 @@ use Max\KingOfTheHill\Hill;
 use Max\KingOfTheHill\KingOfTheHill;
 use pocketmine\command\CommandSender;
 use pocketmine\plugin\Plugin;
-use pocketmine\utils\TextFormat;
 
 class CreateSubCommand extends BaseSubCommand {
 
@@ -28,20 +27,21 @@ class CreateSubCommand extends BaseSubCommand {
 
     public function onRun(CommandSender $sender, string $aliasUsed, array $args): void {
         $name = $args["Hill"];
-        if ($this->plugin->hasHill($name)) {
+        $hill = Hill::getHill($name);
+        if ($hill !== null) {
             $sender->sendMessage(str_replace(
                 "{HILL}",
-                $name,
-                TextFormat::colorize($this->plugin->messages->getNested("fail.hill-already-exist", "fail.hill-already-exist"))
+                $hill->getName(),
+                $this->plugin->getMessage("fail.hill-already-exist")
             ));
             return;
         }
 
-        $this->plugin->addHill(new Hill($name, true, 6000, [], null, null, null, null));
+        new Hill($name, true, 6000, [], null, null, null, null);
         $sender->sendMessage(str_replace(
             "{HILL}",
             $name,
-            TextFormat::colorize($this->plugin->messages->getNested("success.hill-create", "success.hill-create"))
+            $this->plugin->getMessage("success.hill-create")
         ));
     }
 }

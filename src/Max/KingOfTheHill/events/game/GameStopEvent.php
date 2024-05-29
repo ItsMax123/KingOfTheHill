@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Max\KingOfTheHill\events\game;
 
-use Max\KingOfTheHill\events\GameEvent;
-use Max\KingOfTheHill\Game;
+use Max\KingOfTheHill\events\HillEvent;
+use Max\KingOfTheHill\Hill;
 
-class GameStopEvent extends GameEvent {
-    public function __construct(Game $game) {
-        $this->game = $game;
+class GameStopEvent extends HillEvent {
+    public function __construct(Hill $hill) {
+        $this->hill = $hill;
     }
 }

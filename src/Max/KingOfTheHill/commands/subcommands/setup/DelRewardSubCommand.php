@@ -8,10 +8,10 @@ use CortexPE\Commando\args\RawStringArgument;
 use CortexPE\Commando\args\TextArgument;
 use CortexPE\Commando\BaseSubCommand;
 use CortexPE\Commando\exception\ArgumentOrderException;
+use Max\KingOfTheHill\Hill;
 use Max\KingOfTheHill\KingOfTheHill;
 use pocketmine\command\CommandSender;
 use pocketmine\plugin\Plugin;
-use pocketmine\utils\TextFormat;
 
 class DelRewardSubCommand extends BaseSubCommand {
 
@@ -29,22 +29,22 @@ class DelRewardSubCommand extends BaseSubCommand {
 
     public function onRun(CommandSender $sender, string $aliasUsed, array $args): void {
         $name = $args["Hill"];
-        if (!$this->plugin->hasHill($name)) {
+        $hill = Hill::getHill($name);
+        if ($hill === null) {
             $sender->sendMessage(str_replace(
                 "{HILL}",
                 $name,
-                TextFormat::colorize($this->plugin->messages->getNested("fail.hill-doesnt-exist", "fail.hill-doesnt-exist"))
+                $this->plugin->getMessage("fail.hill-doesnt-exist")
             ));
             return;
         }
 
-        $hill = $this->plugin->getHill($name);
         $reward = $args["Command"];
         if (!$hill->hasReward($reward)) {
             $sender->sendMessage(str_replace(
                 "{REWARD}",
                 $reward,
-                TextFormat::colorize($this->plugin->messages->getNested("fail.reward-doesnt-exist", "fail.reward-doesnt-exist"))
+                $this->plugin->getMessage("fail.reward-doesnt-exist")
             ));
             return;
         }
@@ -53,7 +53,7 @@ class DelRewardSubCommand extends BaseSubCommand {
         $sender->sendMessage(str_replace(
             "{HILL}",
             $hill->getName(),
-            TextFormat::colorize($this->plugin->messages->getNested("success.del-reward", "success.del-reward"))
+            $this->plugin->getMessage("success.del-reward")
         ));
     }
 }

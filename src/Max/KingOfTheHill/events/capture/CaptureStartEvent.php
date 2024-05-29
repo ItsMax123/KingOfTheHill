@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Max\KingOfTheHill\events\capture;
 
-use Max\KingOfTheHill\events\GameEvent;
-use Max\KingOfTheHill\Game;
+use Max\KingOfTheHill\events\HillEvent;
+use Max\KingOfTheHill\Hill;
 use pocketmine\event\Cancellable;
 use pocketmine\event\CancellableTrait;
 use pocketmine\player\Player;
 
-class CaptureStartEvent extends GameEvent implements Cancellable {
+class CaptureStartEvent extends HillEvent implements Cancellable {
     use CancellableTrait;
 
     protected Player $player;
     protected int $time;
 
-    public function __construct(Game $game, Player $player, int $time) {
-        $this->game = $game;
+    public function __construct(Hill $hill, Player $player, int $time) {
+        $this->hill = $hill;
         $this->player = $player;
         $this->time = $time;
     }

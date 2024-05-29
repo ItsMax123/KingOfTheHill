@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Max\KingOfTheHill\commands\subcommands;
 
 use CortexPE\Commando\BaseSubCommand;
-use Max\KingOfTheHill\Game;
 use Max\KingOfTheHill\KingOfTheHill;
 use pocketmine\command\CommandSender;
 use pocketmine\plugin\Plugin;
@@ -20,6 +19,6 @@ class StopSubCommand extends BaseSubCommand {
     }
 
     public function onRun(CommandSender $sender, string $aliasUsed, array $args): void {
-        Game::stopGame();
+        $this->plugin->stopGame();
     }
 }

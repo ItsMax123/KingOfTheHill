@@ -7,11 +7,10 @@ namespace Max\KingOfTheHill\commands\subcommands\setup;
 use CortexPE\Commando\args\RawStringArgument;
 use CortexPE\Commando\BaseSubCommand;
 use CortexPE\Commando\exception\ArgumentOrderException;
-use Max\KingOfTheHill\Game;
+use Max\KingOfTheHill\Hill;
 use Max\KingOfTheHill\KingOfTheHill;
 use pocketmine\command\CommandSender;
 use pocketmine\plugin\Plugin;
-use pocketmine\utils\TextFormat;
 
 class DeleteSubCommand extends BaseSubCommand {
 
@@ -28,28 +27,30 @@ class DeleteSubCommand extends BaseSubCommand {
 
     public function onRun(CommandSender $sender, string $aliasUsed, array $args): void {
         $name = $args["Hill"];
-        if (!$this->plugin->hasHill($name)) {
+        $hill = Hill::getHill($name);
+        if ($hill === null) {
             $sender->sendMessage(str_replace(
                 "{HILL}",
                 $name,
-                TextFormat::colorize($this->plugin->messages->getNested("fail.hill-doesnt-exist", "fail.hill-doesnt-exist"))
+                $this->plugin->getMessage("fail.hill-doesnt-exist")
             ));
             return;
         }
-        $hill = $this->plugin->getHill($name);
-        if (($game = Game::getGame()) !== null && $game->getHill() === $hill) {
+
+        if ($hill === $this->plugin->getRunningHill()) {
             $sender->sendMessage(str_replace(
                 "{HILL}",
                 $hill->getName(),
-                TextFormat::colorize($this->plugin->messages->getNested("fail.hill-running", "fail.hill-running"))
+                $this->plugin->getMessage("fail.hill-running")
             ));
             return;
         }
-        $this->plugin->removeHill($name);
+
+        $hill->delete();
         $sender->sendMessage(str_replace(
             "{HILL}",
             $hill->getName(),
-            TextFormat::colorize($this->plugin->messages->getNested("success.hill-delete", "success.hill-delete"))
+            $this->plugin->getMessage("success.hill-delete")
         ));
     }
 }

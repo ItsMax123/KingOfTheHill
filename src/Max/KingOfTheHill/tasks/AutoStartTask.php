@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Max\KingOfTheHill\tasks;
 
-use Max\KingOfTheHill\Game;
+use Max\KingOfTheHill\Hill;
 use Max\KingOfTheHill\KingOfTheHill;
 use pocketmine\scheduler\Task;
 
@@ -44,10 +44,13 @@ class AutoStartTask extends Task {
         $this->lastCheck = $now;
         $this->times[] = array_shift($this->times);
         if (count($this->plugin->getServer()->getOnlinePlayers()) < $this->minPlayers) return;
-        $hills = array_filter($this->plugin->getHills(), function($hill) {
+        $hills = array_filter(Hill::getHills(), function($hill) {
             return $hill->getEnabled();
         });
-        if (!$hills) return;
-        Game::startGame($hills[array_rand($hills)]);
+        if (!$hills) {
+            $this->plugin->getLogger()->info("[AutoStart] " . $this->plugin->getMessage("fail.no-hills"));
+            return;
+        }
+        $this->plugin->startGame($hills[array_rand($hills)]);
     }
 }

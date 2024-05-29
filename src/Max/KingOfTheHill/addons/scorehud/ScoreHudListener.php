@@ -12,6 +12,7 @@ use Max\KingOfTheHill\events\capture\CaptureStopEvent;
 use Max\KingOfTheHill\events\capture\CaptureUpdateEvent;
 use Max\KingOfTheHill\events\game\GameStartEvent;
 use Max\KingOfTheHill\events\game\GameStopEvent;
+use Max\KingOfTheHill\KingOfTheHill;
 use pocketmine\event\Listener;
 
 final class ScoreHudListener implements Listener {
@@ -19,9 +20,16 @@ final class ScoreHudListener implements Listener {
         $tag = $event->getTag();
         switch ($tag->getName()) {
             case "kingofthehill.hill":
+                $hill = KingOfTheHill::getInstance()->getRunningHill();
+                $tag->setValue($hill === null ? "" : $hill->getName());
+                break;
             case "kingofthehill.king":
+                $king = KingOfTheHill::getInstance()->getRunningKing();
+                $tag->setValue($king === null ? "" : $king->getPlayer()->getName());
+                break;
             case "kingofthehill.time":
-                $tag->setValue("");
+                $hill = KingOfTheHill::getInstance()->getRunningHill();
+                $tag->setValue($hill === null ? "" : $hill->getTime());
                 break;
         }
     }
@@ -45,10 +53,10 @@ final class ScoreHudListener implements Listener {
 
     public function onCaptureStop(CaptureStopEvent $event): void {
         (new ServerTagUpdateEvent(new ScoreTag("kingofthehill.king", "N/A")))->call();
-        (new ServerTagUpdateEvent(new ScoreTag("kingofthehill.time", gmdate("i:s", (int)($event->getGame()->getHill()->getTime() / 20)))))->call();
+        (new ServerTagUpdateEvent(new ScoreTag("kingofthehill.time", gmdate("i:s", (int)($event->getHill()->getTime() / 20)))))->call();
     }
 
     public function onCaptureUpdate(CaptureUpdateEvent $event): void {
-        (new ServerTagUpdateEvent(new ScoreTag("kingofthehill.time", gmdate("i:s", (int)($event->getGame()->getKing()->getCaptureTicksLeft() / 20)))))->call();
+        (new ServerTagUpdateEvent(new ScoreTag("kingofthehill.time", gmdate("i:s", (int)($event->getKing()->getCaptureTicksLeft() / 20)))))->call();
     }
 }

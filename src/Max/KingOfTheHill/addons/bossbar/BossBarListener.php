@@ -13,7 +13,6 @@ use Max\KingOfTheHill\KingOfTheHill;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
-use pocketmine\utils\TextFormat;
 use xenialdan\apibossbar\BossBar;
 
 final class BossBarListener implements Listener {
@@ -41,12 +40,12 @@ final class BossBarListener implements Listener {
         $this->bar->setTitle(str_replace(
             "{HILL}",
             $event->getHill()->getName(),
-            TextFormat::colorize($this->plugin->messages->getNested("bossbar.title", "bossbar.title"))
+            $this->plugin->getMessage("bossbar.title")
         ));
         $this->bar->setSubtitle(str_replace(
             ["{PLAYER}", "{TIME}"],
             ["N/A", gmdate("i:s", (int)($event->getHill()->getTime() / 20))],
-            TextFormat::colorize($this->plugin->messages->getNested("bossbar.subtitle", "bossbar.subtitle"))
+            $this->plugin->getMessage("bossbar.subtitle")
         ));
         $this->bar->showToAll();
         $this->show = true;
@@ -61,7 +60,7 @@ final class BossBarListener implements Listener {
         $this->bar->setSubtitle(str_replace(
             ["{PLAYER}", "{TIME}"],
             [$event->getPlayer()->getName(), gmdate("i:s", (int)($event->getTime() / 20))],
-            TextFormat::colorize($this->plugin->messages->getNested("bossbar.subtitle", "bossbar.subtitle"))
+            $this->plugin->getMessage("bossbar.subtitle")
         ));
     }
 
@@ -69,17 +68,17 @@ final class BossBarListener implements Listener {
         $this->bar->setPercentage(0);
         $this->bar->setSubtitle(str_replace(
             ["{PLAYER}", "{TIME}"],
-            ["N/A", gmdate("i:s", (int)($event->getGame()->getHill()->getTime() / 20))],
-            TextFormat::colorize($this->plugin->messages->getNested("bossbar.subtitle", "bossbar.subtitle"))
+            ["N/A", gmdate("i:s", (int)($event->getHill()->getTime() / 20))],
+            $this->plugin->getMessage("bossbar.subtitle")
         ));
     }
 
     public function onCaptureUpdate(CaptureUpdateEvent $event): void {
-        $this->bar->setPercentage(($event->getGame()->getHill()->getTime() - $event->getGame()->getKing()->getCaptureTicksLeft()) / $event->getGame()->getHill()->getTime());
+        $this->bar->setPercentage(($event->getHill()->getTime() - $event->getKing()->getCaptureTicksLeft()) / $event->getHill()->getTime());
         $this->bar->setSubtitle(str_replace(
             ["{PLAYER}", "{TIME}"],
-            [$event->getGame()->getKing()->getPlayer()->getName(), gmdate("i:s", (int)($event->getGame()->getKing()->getCaptureTicksLeft() / 20))],
-            TextFormat::colorize($this->plugin->messages->getNested("bossbar.subtitle", "bossbar.subtitle"))
+            [$event->getKing()->getPlayer()->getName(), gmdate("i:s", (int)($event->getKing()->getCaptureTicksLeft() / 20))],
+            $this->plugin->getMessage("bossbar.subtitle")
         ));
     }
 }

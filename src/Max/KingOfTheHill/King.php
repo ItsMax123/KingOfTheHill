@@ -9,26 +9,26 @@ use pocketmine\Server;
 
 class King {
     public Player $player;
-    public int $captureEndTime;
+    public int $captureEndTick;
 
     public function __construct(Player $player, int $time) {
         $this->player = $player;
-        $this->captureEndTime = Server::getInstance()->getTick() + $time;
+        $this->captureEndTick = Server::getInstance()->getTick() + $time;
     }
 
     public function getPlayer(): ?Player {
         return $this->player;
     }
 
-    public function getCaptureEndTime(): int {
-        return $this->captureEndTime;
+    public function getCaptureEndTick(): int {
+        return $this->captureEndTick;
     }
 
     public function isCapturing(): bool {
-        return $this->captureEndTime > Server::getInstance()->getTick();
+        return $this->captureEndTick > Server::getInstance()->getTick();
     }
 
     public function getCaptureTicksLeft(): int {
-        return $this->captureEndTime - Server::getInstance()->getTick();
+        return $this->captureEndTick - Server::getInstance()->getTick();
     }
 }
