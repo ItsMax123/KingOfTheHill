@@ -20,16 +20,13 @@ final class ScoreHudListener implements Listener {
         $tag = $event->getTag();
         switch ($tag->getName()) {
             case "kingofthehill.hill":
-                $hill = KingOfTheHill::getInstance()->getRunningHill();
-                $tag->setValue($hill === null ? "" : $hill->getName());
+                $tag->setValue(($hill = KingOfTheHill::getInstance()->getRunningHill()) === null ? "" : $hill->getName());
                 break;
             case "kingofthehill.king":
-                $king = KingOfTheHill::getInstance()->getRunningKing();
-                $tag->setValue($king === null ? "" : $king->getPlayer()->getName());
+                $tag->setValue(($king = KingOfTheHill::getInstance()->getRunningKing()) === null ? "" : $king->getPlayer()->getName());
                 break;
             case "kingofthehill.time":
-                $hill = KingOfTheHill::getInstance()->getRunningHill();
-                $tag->setValue($hill === null ? "" : $hill->getTime());
+                $tag->setValue(($hill = KingOfTheHill::getInstance()->getRunningHill()) === null ? "" : gmdate("i:s", (int)($hill->getTime() / 20)));
                 break;
         }
     }

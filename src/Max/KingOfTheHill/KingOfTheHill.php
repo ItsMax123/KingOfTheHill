@@ -25,11 +25,9 @@ class KingOfTheHill extends PluginBase {
 
     private ?GameTask $task = null;
 
-    private int $updateInterval;
-
     private Config $messages;
-
     public Config $data;
+    private int $updateInterval;
 
     public function onLoad(): void {
         self::$instance = $this;
