@@ -8,6 +8,7 @@ KingOfTheHill is an open source [PocketMine-MP](https://pmmp.io/) plugin that ad
 ## Features
 - Configurable **Auto Start** feature to automatically start the KOTH Event at specific times of day.
 - Configurable **Boss Bar** showing the health as the timer of the hill being captured.
+- Configurable **Discord Webhook** to notify your community of when an event starts and ends.
 - Optional **ScoreHud** support using the `kingofthehill.hill`, `kingofthehill.king` and `kingofthehill.time` tags.
 - In-Game **Commands** to create and setup hills easily.
 - Configurable **Rewards** for the winner of the event.
