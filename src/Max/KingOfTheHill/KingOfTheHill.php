@@ -7,6 +7,7 @@ namespace Max\KingOfTheHill;
 use CortexPE\Commando\exception\HookAlreadyRegistered;
 use CortexPE\Commando\PacketHooker;
 use Max\KingOfTheHill\addons\bossbar\BossBarListener;
+use Max\KingOfTheHill\addons\discord\DiscordWebhookListener;
 use Max\KingOfTheHill\addons\scorehud\ScoreHudListener;
 use Max\KingOfTheHill\commands\KothCommand;
 use Max\KingOfTheHill\events\game\GameStartEvent;
@@ -51,6 +52,9 @@ class KingOfTheHill extends PluginBase {
         $this->saveResource("data.yml");
         $this->data = new Config($this->getDataFolder() . "data.yml", Config::YAML);
 
+        $this->saveResource("discord.yml");
+        $discord = new Config($this->getDataFolder() . "discord.yml", Config::YAML);
+
         try {
             foreach ($this->data->get("hills") as $name => $data) {
                 new Hill(
@@ -74,6 +78,10 @@ class KingOfTheHill extends PluginBase {
 
         if (is_bool($bossbar = $config->get("bossbar", true)) && $bossbar) {
             $this->getServer()->getPluginManager()->registerEvents(new BossBarListener($this), $this);
+        }
+
+        if (is_string($url = $discord->get("url")) && filter_var($url, FILTER_VALIDATE_URL)) {
+            $this->getServer()->getPluginManager()->registerEvents(new DiscordWebhookListener($url, $discord), $this);
         }
 
         $times = is_array($times = $config->getNested("autostart.times", [])) ? array_filter($times, function($time): bool {return is_float($time);}) : [];

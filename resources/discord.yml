@@ -1,0 +1,84 @@
+# The Discord webhook URL.
+url: ""
+
+# The message to send when the event starts. Will replace {HILL}, {X}, {Y}, {Z} and {REWARDS}.
+start: {
+  "username": "KingOfTheHill",
+  "avatar_url": "https://raw.githubusercontent.com/ItsMax123/KingOfTheHill/338ed24a85102100b32ef27b6ab88a93f4f13ccc/KingOfTheHill.png",
+  "content": "@everyone", # To ping a certain role: <@&role_id> or to ping a specific account: <@account_id> or if you want no message at all, you can remove/comment this line
+  "embeds": [
+    {
+      "color": 1894657,
+      "title": "KOTH **{HILL}** started",
+      "description": "The King of the Hill **{HILL}** event has started!",
+      "author": {
+        "name": "KingOfTheHill",
+        "icon_url": "https://raw.githubusercontent.com/ItsMax123/KingOfTheHill/338ed24a85102100b32ef27b6ab88a93f4f13ccc/KingOfTheHill.png",
+        "url": "https://poggit.pmmp.io/p/KingOfTheHill"
+      },
+      "thumbnail": {
+        "url": "https://raw.githubusercontent.com/ItsMax123/KingOfTheHill/338ed24a85102100b32ef27b6ab88a93f4f13ccc/KingOfTheHill.png"
+      },
+      "fields": [
+        {
+          "name": "Rewards",
+          "value": "{REWARDS}",
+          "inline": false
+        },
+        {
+          "name": "Coords",
+          "value": "{X}, {Y}, {Z}",
+          "inline": true
+        }
+      ],
+      "image": {
+        "url": "https://raw.githubusercontent.com/ItsMax123/KingOfTheHill/338ed24a85102100b32ef27b6ab88a93f4f13ccc/KingOfTheHill.png"
+      },
+      "footer": {
+        "text": "KingOfTheHill",
+        "icon_url": "https://raw.githubusercontent.com/ItsMax123/KingOfTheHill/338ed24a85102100b32ef27b6ab88a93f4f13ccc/KingOfTheHill.png"
+      }
+    }
+  ]
+}
+
+# The message to send when someone captures. Will replace {HILL}, {WINNER}, {X}, {Y}, {Z} and {REWARDS}.
+win: {
+  "username": "KingOfTheHill",
+  "avatar_url": "https://raw.githubusercontent.com/ItsMax123/KingOfTheHill/338ed24a85102100b32ef27b6ab88a93f4f13ccc/KingOfTheHill.png",
+  "content": "@everyone", # To ping a certain role: <@&role_id> or to ping a specific account: <@account_id> or if you want no message at all, you can remove/comment this line
+  "embeds": [
+    {
+      "color": 1894657,
+      "title": "KOTH **{HILL}** ended",
+      "description": "The King of the Hill **{HILL}** event has ended!",
+      "author": {
+        "name": "KingOfTheHill",
+        "icon_url": "https://raw.githubusercontent.com/ItsMax123/KingOfTheHill/338ed24a85102100b32ef27b6ab88a93f4f13ccc/KingOfTheHill.png",
+        "url": "https://poggit.pmmp.io/p/KingOfTheHill"
+      },
+      "thumbnail": {
+        "url": "https://raw.githubusercontent.com/ItsMax123/KingOfTheHill/338ed24a85102100b32ef27b6ab88a93f4f13ccc/KingOfTheHill.png"
+      },
+      "fields": [
+        {
+          "name": "Winner",
+          "value": "{WINNER}",
+          "inline": false
+        },
+        {
+          "name": "Rewards",
+          "value": "{REWARDS}",
+          "inline": false
+        }
+      ],
+      "image": {
+        "url": "https://raw.githubusercontent.com/ItsMax123/KingOfTheHill/338ed24a85102100b32ef27b6ab88a93f4f13ccc/KingOfTheHill.png"
+      },
+      "footer": {
+        "text": "KingOfTheHill",
+        "icon_url": "https://raw.githubusercontent.com/ItsMax123/KingOfTheHill/338ed24a85102100b32ef27b6ab88a93f4f13ccc/KingOfTheHill.png"
+      }
+    }
+  ]
+}

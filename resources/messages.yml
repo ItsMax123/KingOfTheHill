@@ -49,9 +49,9 @@ info:
 list:
   title: "&eList of all Hills:&r"
   line: " - {STATUS}&r: {HILL}{COORDS}"  # Will replace {HILL}, {STATUS} and {COORDS}
-  running: "&b&lRunning"  # Will replace {COORDS}
-  enabled: "&aEnabled"  # Will replace {COORDS}
-  disabled: "&cDisabled"  # Will replace {COORDS}
+  running: "&b&lRunning"
+  enabled: "&aEnabled"
+  disabled: "&cDisabled"
   coords-set: " (&6{X}&r, &6{Y}&r, &6{Z}&r)"  # Will replace {X}, {Y} and {Z}
   coords-not-set: ""
 
